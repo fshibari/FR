@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { renderPdf, type ReleasePayload, type Lang } from '../../../lib/pdf/generate';
 
 export const runtime = 'nodejs';
@@ -12,30 +12,30 @@ async function readFile(form: FormData, key: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const form = await req.formData();
+  const dataRaw = form.get('data') as string | null;
+  if (!dataRaw) return new Response(JSON.stringify({ error: 'Missing data' }), { status: 400 });
+  const data = JSON.parse(dataRaw) as ReleasePayload;
+
+  const images = {
+    sharedSelfie: await readFile(form, 'sharedSelfie'),
+    aSelfie: await readFile(form, 'aSelfie'),
+    aId: await readFile(form, 'aId'),
+    aSign: await readFile(form, 'aSign'),
+    bSelfie: await readFile(form, 'bSelfie'),
+    bId: await readFile(form, 'bId'),
+    bSign: await readFile(form, 'bSign'),
+  };
+
+  const ua = (await import('../../../locales/ua.json')).default;
+  const ro = (await import('../../../locales/ro.json')).default;
+  const en = (await import('../../../locales/en.json')).default;
+  const dicts = { ua, ro, en } as Record<Lang, any>;
+
   try {
-    const form = await req.formData();
-    const dataRaw = form.get('data') as string | null;
-    if (!dataRaw) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
-    const data = JSON.parse(dataRaw) as ReleasePayload;
-
-    const images = {
-      sharedSelfie: await readFile(form, 'sharedSelfie'),
-      aSelfie: await readFile(form, 'aSelfie'),
-      aId: await readFile(form, 'aId'),
-      aSign: await readFile(form, 'aSign'),
-      bSelfie: await readFile(form, 'bSelfie'),
-      bId: await readFile(form, 'bId'),
-      bSign: await readFile(form, 'bSign'),
-    };
-
-    const ua = (await import('../../../locales/ua.json')).default;
-    const ro = (await import('../../../locales/ro.json')).default;
-    const en = (await import('../../../locales/en.json')).default;
-    const dicts = { ua, ro, en } as Record<Lang, any>;
-
     const pdf = await renderPdf(data, dicts, images);
-    const ab = pdf.buffer.slice(pdf.byteOffset, pdf.byteOffset + pdf.byteLength);
-    return new NextResponse(ab, {
+    const u8 = new Uint8Array(pdf);
+    return new Response(u8, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
@@ -44,6 +44,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (e:any) {
     console.error(e);
-    return NextResponse.json({ error: e?.message || 'Internal error' }, { status: 500 });
+    return new Response(JSON.stringify({ error: e?.message || 'Internal error' }), { status: 500 });
   }
 }
