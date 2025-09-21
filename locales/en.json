@@ -1,0 +1,31 @@
+{
+  "title": "UNIVERSAL RELEASE (Shibari + Photo/Video)",
+  "groups": {
+    "nudity": "Nudity level",
+    "ties": "Ties/positions"
+  },
+  "toggles": {
+    "publication_agreed": "Publication agreed",
+    "tfp": "TFP (free)",
+    "commercial_allowed": "Commercial use allowed"
+  },
+  "parties": {
+    "a": "Party A",
+    "b": "Party B"
+  },
+  "session": {
+    "place": "Place",
+    "date": "Date",
+    "time": "Time",
+    "safe_word": "Safe word",
+    "safe_gesture": "Safe gesture"
+  },
+  "section": {
+    "photos": "Photos & signatures",
+    "qr": "Verification QR",
+    "lang": "Section language",
+    "mode": "Mode",
+    "rid": "Release ID",
+    "created": "Created at"
+  }
+}

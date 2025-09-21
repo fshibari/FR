@@ -1,0 +1,31 @@
+{
+  "title": "RELEASE UNIVERSAL (Shibari + Foto/Video)",
+  "groups": {
+    "nudity": "Nivel de nuditate",
+    "ties": "Tipuri de legături/poziții"
+  },
+  "toggles": {
+    "publication_agreed": "Publicare permisă",
+    "tfp": "TFP (fără plată)",
+    "commercial_allowed": "Utilizare comercială permisă"
+  },
+  "parties": {
+    "a": "Partea A",
+    "b": "Partea B"
+  },
+  "session": {
+    "place": "Locul",
+    "date": "Data",
+    "time": "Ora",
+    "safe_word": "Cuvânt de oprire",
+    "safe_gesture": "Semnal de oprire"
+  },
+  "section": {
+    "photos": "Fotografii și semnături",
+    "qr": "QR de verificare",
+    "lang": "Limba secțiunii",
+    "mode": "Mod",
+    "rid": "ID release",
+    "created": "Creat la"
+  }
+}

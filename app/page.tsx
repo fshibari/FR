@@ -1,0 +1,62 @@
+'use client'
+import { useState } from 'react'
+
+export default function Home() {
+  const [rid] = useState('abcd-ef12-3456-7890')
+  const [lang, setLang] = useState<'ua'|'ro'|'en'>('ua')
+  const [files, setFiles] = useState<Record<string, File|undefined>>({})
+
+  async function generate() {
+    const data = {
+      rid,
+      createdAtIso: new Date().toISOString(),
+      mode: 'private',
+      sectionLangs: ['ua','ro','en'],
+      language: lang,
+      parties: { a:{ fullName:'Іван Іванов' }, b:{ fullName:'Марія Петренко' } },
+      session: { place:'Київ', date:'2025-09-25', time:'20:30', safe_word:'RED', safe_gesture:'Піднята рука' },
+      expectations: {},
+      checkboxGroups: [
+        { id:'nudity', titleKey:'nudity', items:[ {id:'waist_up', labelKey:'nudity.waist_up', checked:true}, {id:'full', labelKey:'nudity.full', checked:false} ] },
+        { id:'ties', titleKey:'ties', items:[ {id:'futaba', labelKey:'ties.futaba', checked:true} ] }
+      ],
+      toggles: { publication_agreed:true, tfp:true, commercial_allowed:false }
+    };
+
+    const fd = new FormData();
+    fd.append('data', JSON.stringify(data));
+    for (const k of Object.keys(files)) {
+      const f = files[k];
+      if (f) fd.append(k, f);
+    }
+    const res = await fetch('/api/pdf', { method:'POST', body: fd });
+    if (!res.ok) { alert('Помилка PDF'); return; }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  }
+
+  return (
+    <main style={{ maxWidth: 820, margin: '24px auto', padding: 16 }}>
+      <h1>Release WebApp — демо генерації PDF</h1>
+      <p>Мова UI: &nbsp;
+        <select value={lang} onChange={e => setLang(e.target.value as any)}>
+          <option value="ua">Українська</option>
+          <option value="ro">Română</option>
+          <option value="en">English</option>
+        </select>
+      </p>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12 }}>
+        <div><label>Спільне селфі <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, sharedSelfie:e.target.files?.[0]}))} /></label></div>
+        <div><label>A Selfie <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aSelfie:e.target.files?.[0]}))} /></label></div>
+        <div><label>A ID <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aId:e.target.files?.[0]}))} /></label></div>
+        <div><label>A Sign <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aSign:e.target.files?.[0]}))} /></label></div>
+        <div><label>B Selfie <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bSelfie:e.target.files?.[0]}))} /></label></div>
+        <div><label>B ID <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bId:e.target.files?.[0]}))} /></label></div>
+        <div><label>B Sign <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bSign:e.target.files?.[0]}))} /></label></div>
+      </div>
+      <p><button onClick={generate} style={{ padding:'10px 16px', marginTop:12 }}>Згенерувати PDF</button></p>
+      <p style={{color:'#666'}}>Фото будь-яких пропорцій будуть обрізані та приведені до формату 3:4 на сервері.</p>
+    </main>
+  )
+}
