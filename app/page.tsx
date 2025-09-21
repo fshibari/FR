@@ -31,7 +31,13 @@ export default function Home() {
       const f = files[k];
       if (f) fd.append(k, f);
     }
-    const res = await fetch('/api/pdf', { method:'POST', body: fd });
+    let res: Response;
+    try {
+      res = await fetch('/api/pdf', { method:'POST', body: fd });
+    } catch (e:any) {
+      setStatus('Network error: ' + (e?.message||e));
+      return;
+    }
     if (!res.ok) {
       const text = await res.text();
       setStatus('Помилка PDF: ' + text);
@@ -65,7 +71,7 @@ export default function Home() {
       <p><button onClick={generate} style={{ padding:'10px 16px', marginTop:12 }}>Згенерувати PDF</button></p>
       <p style={{color:'#666'}}>Фото будь-яких пропорцій будуть обрізані та приведені до формату 3:4 на сервері.</p>
       <pre style={{ background:'#f6f6f6', padding:10 }}>{status}</pre>
-      <p><a href="/api/pdf/ping" target="_blank">/api/pdf/ping</a> | <a href="/api/pdf/test" target="_blank">/api/pdf/test (мінімальний PDF)</a></p>
+      <p><a href="/api/pdf/ping" target="_blank">/api/pdf/ping</a> | <a href="/api/pdf/test" target="_blank">/api/pdf/test</a> | <a href="/api/pdf/debug" target="_blank">/api/pdf/debug</a></p>
     </main>
   )
 }
