@@ -1,6 +1,6 @@
 import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
-import sharp from 'sharp';
+import sharp from '@img/sharp'; // Vercel-friendly sharp build
 
 export type Lang = 'ua'|'ro'|'en';
 
@@ -36,9 +36,14 @@ export interface ImagesInput {
   bSelfie?: Buffer; bId?: Buffer; bSign?: Buffer;
 }
 
+// Normalize image to 3:4 and reasonable width. If sharp fails, return original buffer.
 export async function normalize3x4(img: Buffer, targetW=600) {
-  const targetH = Math.round(targetW*4/3);
-  return await sharp(img).resize({ width: targetW, height: targetH, fit: 'cover' }).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
+  try {
+    const targetH = Math.round(targetW*4/3);
+    return await sharp(img).resize({ width: targetW, height: targetH, fit: 'cover' }).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
+  } catch {
+    return img;
+  }
 }
 
 export async function htmlFor(lang: Lang, dict: any, data: ReleasePayload, imgs: ImagesInput) {
@@ -57,7 +62,7 @@ export async function htmlFor(lang: Lang, dict: any, data: ReleasePayload, imgs:
   function imgTag(buf?: Buffer, alt='') {
     if (!buf) return '';
     const b64 = buf.toString('base64');
-    return `<img class="img" src="data:image/jpeg;base64,${b64}" alt="${safe(alt)}" />`;
+    return `<img class="img" src="data:image/jpeg;base64,${b64}" alt="${safe(alt)}" />`
   }
 
   const L = dict;
@@ -93,7 +98,7 @@ export async function htmlFor(lang: Lang, dict: any, data: ReleasePayload, imgs:
       <tr><td>${L.section.rid}</td><td>${safe(data.rid)}</td></tr>
       <tr><td>${L.section.created}</td><td>${safe(data.createdAtIso)}</td></tr>
       <tr><td>${L.section.mode}</td><td>${safe(data.mode.toUpperCase())}</td></tr>
-      <tr><td>${L.section.lang}</td><td>${lang.toUpperCase()}</td></tr>
+      <tr><td>${L.section.lang}</td><td>${(lang as string).toUpperCase()}</td></tr>
     </table>
 
     <h2>${L.parties.a} / ${L.parties.b}</h2>
@@ -161,7 +166,6 @@ export async function renderPdf(data: ReleasePayload, dicts: Record<Lang, any>, 
       pages.push(page);
     }
 
-    // Render with page-breaks
     const first = pages[0];
     const pdf = await first.pdf({ format:'A4', printBackground:true, preferCSSPageSize:true });
     for (const p of pages) await p.close();
