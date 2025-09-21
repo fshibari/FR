@@ -5,8 +5,10 @@ export default function Home() {
   const [rid] = useState('abcd-ef12-3456-7890')
   const [lang, setLang] = useState<'ua'|'ro'|'en'>('ua')
   const [files, setFiles] = useState<Record<string, File|undefined>>({})
+  const [status, setStatus] = useState<string>('')
 
   async function generate() {
+    setStatus('Генерація...')
     const data = {
       rid,
       createdAtIso: new Date().toISOString(),
@@ -30,9 +32,14 @@ export default function Home() {
       if (f) fd.append(k, f);
     }
     const res = await fetch('/api/pdf', { method:'POST', body: fd });
-    if (!res.ok) { alert('Помилка PDF'); return; }
+    if (!res.ok) {
+      const text = await res.text();
+      setStatus('Помилка PDF: ' + text);
+      return;
+    }
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
+    setStatus('OK');
     window.open(url, '_blank');
   }
 
@@ -57,6 +64,8 @@ export default function Home() {
       </div>
       <p><button onClick={generate} style={{ padding:'10px 16px', marginTop:12 }}>Згенерувати PDF</button></p>
       <p style={{color:'#666'}}>Фото будь-яких пропорцій будуть обрізані та приведені до формату 3:4 на сервері.</p>
+      <pre style={{ background:'#f6f6f6', padding:10 }}>{status}</pre>
+      <p><a href="/api/pdf/ping" target="_blank">/api/pdf/ping</a> | <a href="/api/pdf/test" target="_blank">/api/pdf/test (мінімальний PDF)</a></p>
     </main>
   )
 }
