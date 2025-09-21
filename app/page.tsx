@@ -49,29 +49,45 @@ export default function Home() {
     window.open(url, '_blank');
   }
 
+  const card = { background:'#14141d', border:'1px solid #262636', borderRadius:12, padding:16 }
+
   return (
-    <main style={{ maxWidth: 820, margin: '24px auto', padding: 16 }}>
-      <h1>Release WebApp — демо генерації PDF</h1>
-      <p>Мова UI: &nbsp;
-        <select value={lang} onChange={e => setLang(e.target.value as any)}>
-          <option value="ua">Українська</option>
-          <option value="ro">Română</option>
-          <option value="en">English</option>
-        </select>
-      </p>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12 }}>
-        <div><label>Спільне селфі <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, sharedSelfie:e.target.files?.[0]}))} /></label></div>
-        <div><label>A Selfie <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aSelfie:e.target.files?.[0]}))} /></label></div>
-        <div><label>A ID <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aId:e.target.files?.[0]}))} /></label></div>
-        <div><label>A Sign <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aSign:e.target.files?.[0]}))} /></label></div>
-        <div><label>B Selfie <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bSelfie:e.target.files?.[0]}))} /></label></div>
-        <div><label>B ID <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bId:e.target.files?.[0]}))} /></label></div>
-        <div><label>B Sign <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bSign:e.target.files?.[0]}))} /></label></div>
+    <main style={{ maxWidth: 980, margin: '24px auto', padding: 16 }}>
+      <h1 style={{ fontSize: 22, marginBottom: 12 }}>Release WebApp — генерація PDF</h1>
+
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+        <section style={card}>
+          <h3>Параметри</h3>
+          <p>Мова UI:&nbsp;
+            <select value={lang} onChange={e => setLang(e.target.value as any)}>
+              <option value="ua">Українська</option>
+              <option value="ro">Română</option>
+              <option value="en">English</option>
+            </select>
+          </p>
+          <button onClick={generate} style={{ padding:'10px 16px', marginTop:12, background:'#4f46e5', color:'#fff', border:'none', borderRadius:8 }}>Згенерувати PDF</button>
+          <pre style={{ background:'#0f0f15', padding:10, marginTop:12, whiteSpace:'pre-wrap' }}>{status}</pre>
+          <p style={{ marginTop:8 }}>
+            <a href="/api/pdf/ping" target="_blank">/api/pdf/ping</a> &nbsp;|&nbsp;
+            <a href="/api/pdf/test" target="_blank">/api/pdf/test</a> &nbsp;|&nbsp;
+            <a href="/api/pdf/debug" target="_blank">/api/pdf/debug</a>
+          </p>
+        </section>
+
+        <section style={card}>
+          <h3>Фото (опційно)</h3>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12 }}>
+            <div><label>Спільне селфі <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, sharedSelfie:e.target.files?.[0]}))} /></label></div>
+            <div><label>A Selfie <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aSelfie:e.target.files?.[0]}))} /></label></div>
+            <div><label>A ID <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aId:e.target.files?.[0]}))} /></label></div>
+            <div><label>A Sign <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, aSign:e.target.files?.[0]}))} /></label></div>
+            <div><label>B Selfie <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bSelfie:e.target.files?.[0]}))} /></label></div>
+            <div><label>B ID <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bId:e.target.files?.[0]}))} /></label></div>
+            <div><label>B Sign <input type="file" accept="image/*" onChange={e=>setFiles(s=>({...s, bSign:e.target.files?.[0]}))} /></label></div>
+          </div>
+          <p style={{color:'#9aa3b2', marginTop:8}}>Зараз бекенд не обрізає фото нативно — але в PDF все одно виглядає як 3×4 завдяки <code>aspect-ratio:3/4</code>.</p>
+        </section>
       </div>
-      <p><button onClick={generate} style={{ padding:'10px 16px', marginTop:12 }}>Згенерувати PDF</button></p>
-      <p style={{color:'#666'}}>Фото будь-яких пропорцій будуть обрізані та приведені до формату 3:4 на сервері.</p>
-      <pre style={{ background:'#f6f6f6', padding:10 }}>{status}</pre>
-      <p><a href="/api/pdf/ping" target="_blank">/api/pdf/ping</a> | <a href="/api/pdf/test" target="_blank">/api/pdf/test</a> | <a href="/api/pdf/debug" target="_blank">/api/pdf/debug</a></p>
     </main>
   )
 }

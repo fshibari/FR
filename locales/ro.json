@@ -2,7 +2,14 @@
   "title": "RELEASE UNIVERSAL (Shibari + Foto/Video)",
   "groups": {
     "nudity": "Nivel de nuditate",
-    "ties": "Tipuri de legături/poziții"
+    "ties": "Tipuri de legături/poziții",
+    "breath": "Respirație",
+    "impact": "Impact",
+    "touches": "Atingeri",
+    "emotional": "Format emoțional",
+    "third_parties": "Terți",
+    "triggers": "Declanșatori",
+    "aftercare": "Îngrijire după"
   },
   "toggles": {
     "publication_agreed": "Publicare permisă",

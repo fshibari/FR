@@ -1,5 +1,1 @@
-import { NextResponse } from 'next/server';
-export const runtime = 'nodejs';
-export function GET() {
-  return NextResponse.json({ ok:true, time: new Date().toISOString() });
-}
+export const runtime='nodejs'; export function GET(){ return new Response(JSON.stringify({ok:true,time:new Date().toISOString()}),{headers:{'Content-Type':'application/json'}})}

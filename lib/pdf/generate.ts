@@ -1,6 +1,5 @@
 import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
-import sharp from '@img/sharp'; // Vercel-friendly sharp build
 
 export type Lang = 'ua'|'ro'|'en';
 
@@ -36,14 +35,9 @@ export interface ImagesInput {
   bSelfie?: Buffer; bId?: Buffer; bSign?: Buffer;
 }
 
-// Normalize image to 3:4 and reasonable width. If sharp fails, return original buffer.
+// Pass-through: return images as-is (no native deps)
 export async function normalize3x4(img: Buffer, targetW=600) {
-  try {
-    const targetH = Math.round(targetW*4/3);
-    return await sharp(img).resize({ width: targetW, height: targetH, fit: 'cover' }).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
-  } catch {
-    return img;
-  }
+  return img;
 }
 
 export async function htmlFor(lang: Lang, dict: any, data: ReleasePayload, imgs: ImagesInput) {
@@ -62,7 +56,7 @@ export async function htmlFor(lang: Lang, dict: any, data: ReleasePayload, imgs:
   function imgTag(buf?: Buffer, alt='') {
     if (!buf) return '';
     const b64 = buf.toString('base64');
-    return `<img class="img" src="data:image/jpeg;base64,${b64}" alt="${safe(alt)}" />`
+    return `<img class="img" src="data:image/jpeg;base64,${b64}" alt="${safe(alt)}" />`;
   }
 
   const L = dict;

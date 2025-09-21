@@ -2,7 +2,14 @@
   "title": "UNIVERSAL RELEASE (Shibari + Photo/Video)",
   "groups": {
     "nudity": "Nudity level",
-    "ties": "Ties/positions"
+    "ties": "Ties/positions",
+    "breath": "Breath control",
+    "impact": "Impact",
+    "touches": "Touches",
+    "emotional": "Emotional format",
+    "third_parties": "Third parties",
+    "triggers": "Triggers",
+    "aftercare": "Aftercare"
   },
   "toggles": {
     "publication_agreed": "Publication agreed",
