@@ -28,14 +28,14 @@ export async function POST(req: NextRequest) {
       bSign: await readFile(form, 'bSign'),
     };
 
-    // Use relative imports to avoid tsconfig path issues on Vercel
     const ua = (await import('../../../locales/ua.json')).default;
     const ro = (await import('../../../locales/ro.json')).default;
     const en = (await import('../../../locales/en.json')).default;
     const dicts = { ua, ro, en } as Record<Lang, any>;
 
     const pdf = await renderPdf(data, dicts, images);
-    return new NextResponse(pdf, {
+    const ab = pdf.buffer.slice(pdf.byteOffset, pdf.byteOffset + pdf.byteLength);
+    return new NextResponse(ab, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',

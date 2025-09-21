@@ -19,7 +19,9 @@ export async function GET() {
     await page.emulateMediaType('print');
     const pdf = await page.pdf({ format:'A4', printBackground:true });
     await browser.close();
-    return new NextResponse(pdf, { status:200, headers: { 'Content-Type':'application/pdf' }});
+    // Convert Node Buffer to ArrayBuffer for NextResponse
+    const ab = pdf.buffer.slice(pdf.byteOffset, pdf.byteOffset + pdf.byteLength);
+    return new NextResponse(ab, { status:200, headers: { 'Content-Type':'application/pdf' }});
   } catch (e:any) {
     return NextResponse.json({ error: e?.message || 'Fail in /api/pdf/test' }, { status:500 });
   }
