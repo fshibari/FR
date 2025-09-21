@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { renderPdf, type ReleasePayload, type Lang } from '@/lib/pdf/generate';
+import { renderPdf, type ReleasePayload, type Lang } from '../../../lib/pdf/generate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -28,9 +28,10 @@ export async function POST(req: NextRequest) {
       bSign: await readFile(form, 'bSign'),
     };
 
-    const ua = (await import('@/locales/ua.json')).default;
-    const ro = (await import('@/locales/ro.json')).default;
-    const en = (await import('@/locales/en.json')).default;
+    // Use relative imports to avoid tsconfig path issues on Vercel
+    const ua = (await import('../../../locales/ua.json')).default;
+    const ro = (await import('../../../locales/ro.json')).default;
+    const en = (await import('../../../locales/en.json')).default;
     const dicts = { ua, ro, en } as Record<Lang, any>;
 
     const pdf = await renderPdf(data, dicts, images);
