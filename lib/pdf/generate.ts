@@ -35,10 +35,7 @@ export interface ImagesInput {
   bSelfie?: Buffer; bId?: Buffer; bSign?: Buffer;
 }
 
-// Pass-through: return images as-is (no native deps)
-export async function normalize3x4(img: Buffer, targetW=600) {
-  return img;
-}
+export async function normalize3x4(img: Buffer) { return img; }
 
 export async function htmlFor(lang: Lang, dict: any, data: ReleasePayload, imgs: ImagesInput) {
   const groups = (data.checkboxGroups||[]).map(g => ({

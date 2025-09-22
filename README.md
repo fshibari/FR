@@ -1,20 +1,30 @@
-# Release WebApp (Next.js + Puppeteer PDF, Vercel-ready)
+# Resource creation with files
 
-## Старт локально
-```bash
-npm i
-npm run dev
-```
+*Automatically synced with your [v0.app](https://v0.app) deployments*
 
-## Деплой на Vercel
-- Завантажити цей код у GitHub.
-- Vercel → Add New Project → обрати репозиторій → Deploy.
-- Налаштування функцій: Node.js 18+, Memory 1024MB (за бажанням).
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/fshibaris-projects/v0-resource-creation-with-files)
+[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/6C2k62KrHiZ)
 
-## Тест
-- GET `/api/pdf/ping` → `{"ok":true,...}`
-- GET `/api/pdf/test` → простий PDF
-- POST `/api/pdf` (через форму на головній) → тримовний PDF (UA→RO→EN).
+## Overview
 
-## Примітка щодо фото
-Щоб уникнути проблем нативних бінарників на Vercel, бекенд **не обрізає** фото, але у PDF вони виглядають як 3×4 завдяки CSS (`aspect-ratio:3/4`). Якщо потрібно — надалі можна додати фронтовий кропер.
+This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
+Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+
+## Deployment
+
+Your project is live at:
+
+**[https://vercel.com/fshibaris-projects/v0-resource-creation-with-files](https://vercel.com/fshibaris-projects/v0-resource-creation-with-files)**
+
+## Build your app
+
+Continue building your app on:
+
+**[https://v0.app/chat/projects/6C2k62KrHiZ](https://v0.app/chat/projects/6C2k62KrHiZ)**
+
+## How It Works
+
+1. Create and modify your project using [v0.app](https://v0.app)
+2. Deploy your chats from the v0 interface
+3. Changes are automatically pushed to this repository
+4. Vercel deploys the latest version from this repository
